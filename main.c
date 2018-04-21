@@ -252,6 +252,58 @@ void uartPacketWorkout(uint8_t* packet, uint8_t count)
 			uartTransmitTrigger = 1;
 			break;
 		}
+		case USETW:
+		{
+			uartSendBufor[0] = SETWE;
+			int pos, nSensor, mSensor, fSensor;
+
+			pos = getCharPos('N', packet, count);
+			nSensor = getValueFromTable(packet + pos + 1, count - pos - 1);
+			pos = getCharPos('M', packet, count);
+			mSensor = getValueFromTable(packet + pos + 1, count - pos - 1);
+
+			pos = getCharPos('F', packet, count);
+			fSensor = getValueFromTable(packet + pos + 1, count - pos - 1);
+
+			double val = nSensor / 1000.0;
+			getBytes(val, uartSendBufor + 1);
+			val = mSensor / 1000.0;
+			getBytes(val, uartSendBufor + 5);
+			val = fSensor / 1000.0;
+			getBytes(val, uartSendBufor + 9);
+			uartTransmitTrigger = 1;
+			break;
+		}
+		case UGETW:
+		{
+			uartSendBufor[0] = GETWE;
+			uartTransmitTrigger = 1;
+			break;
+		}
+		case USETL:
+		{
+			uartSendBufor[0] = SETLF;
+			int pos, kp, tp;
+			count--;
+
+			pos = getCharPos('K', packet, count);
+			kp = getValueFromTable(packet + pos + 1, count - pos - 1);
+			pos = getCharPos('T', packet, count);
+			tp = getValueFromTable(packet + pos + 1, count - pos - 1);
+
+			double val = kp / 1000.0;
+			getBytes(val, uartSendBufor + 1);
+			val = tp / 1000.0;
+			getBytes(val, uartSendBufor + 5);
+			uartTransmitTrigger = 1;
+			break;
+		}
+		case UGETL:
+		{
+			uartSendBufor[0] = GETLF;
+			uartTransmitTrigger = 1;
+			break;
+		}
 		default:
 		{
 			break;

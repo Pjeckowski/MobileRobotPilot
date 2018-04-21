@@ -26,6 +26,10 @@
 #define UENGS 'E'
 #define UGETB 'B' //get base parameters
 #define USETB 'C' //set base parameters
+#define USETW 'W' //set sensor weights
+#define UGETW 'D' //get sensor weights
+#define USETL 'Z' //set line follower parameters
+#define UGETL 'F' //get line follower parameters
 #define UMAXE 'R'
 #define USETP 'N' // set robot positioN
 #define PAEND '\r'
@@ -182,6 +186,38 @@ void uart_sendPacket(uint8_t data[], uint8_t count)
 			uart_sendBasePacket('W', temp);
 			temp = getValFromBytes(data + 5);
 			uart_sendBasePacket('S', temp);
+			break;
+		}
+		case GETWE:
+		{
+			float temp = getValFromBytes(data + 1);
+			uart_sendBasePacket('N', temp);
+			temp = getValFromBytes(data + 5);
+			uart_sendBasePacket('M', temp);
+			temp = getValFromBytes(data + 5);
+			uart_sendBasePacket('F', temp);
+			break;
+		}
+		case GETLF:
+		{
+			float temp = getValFromBytes(data + 1);
+			uart_sendBasePacket('K', temp);
+			temp = getValFromBytes(data + 5);
+			uart_sendBasePacket('T', temp);
+			break;
+		}
+		case FOLIN:
+		{
+			uart_send('P');
+			uart_send('L');
+			uart_send('\r');
+			break;
+		}
+		case FOTOP:
+		{
+			uart_send('P');
+			uart_send('R');
+			uart_send('\r');
 			break;
 		}
 		default:
